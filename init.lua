@@ -1,0 +1,1 @@
+require('./loader').loadScript('PokeMastersBot/ext-init', true)
