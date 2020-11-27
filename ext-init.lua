@@ -50,8 +50,6 @@ end)]]
 n_err = function(...)
 	if not bot.cacheMsg then return end
 
-	--bot.client:getGuild('199688943443116032'):getChannel('747257115327987883')
-	--bot.cacheMsg:reply({
 	bot.client:getGuild('199688943443116032'):getChannel('747257115327987883'):send({
 		embed = {
 			title = 'An error occured!',

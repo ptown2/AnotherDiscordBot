@@ -1,4 +1,3 @@
-local timer = require('timer')
 local dsc = {}
 
 dsc.prefix = '$'
@@ -52,7 +51,6 @@ function dsc:addCommand(cmdtbl)
 	-- Handle the other events the "commands" have.
 	for __, emit in ipairs(bot.events) do
 		if cmdtbl['on'.. (emit:gsub('^%l', string.upper))] and self.emitters[emit] and not isadded[cmdtbl.trigger] then
-			--p(self.emitters[emit], cmdtbl.trigger)
 			table.insert(self.emitters[emit], cmdtbl.trigger)
 			--self.emitters[emit][#self.emitters[emit] + 1] = cmdtbl.trigger
 		end
@@ -132,8 +130,6 @@ function dsc:isCommandValid(message, m_command, cmd_match, override)
 	if m_command.ownerOnly and (not self.botowners[message.author.id] or not message.guild) and (message.guild and not message.member:hasRole(self.guildroles[message.guild.id])) then return false, 'Command is for guild admins/mods or bot owner/creator only.' end
 	if m_command.maxArgs and (m_count > m_command.maxArgs) then return false, 'Too many command arguments. Max args for '.. (m_command.trigger or 'that command') ..' is '.. m_command.maxArgs ..' argvalues.' end
 
-	-- p(m_command.trigger, dsc:callEmitter('canMessageCreateEvent', m_command, message, cmd_match[3]))
-	-- p(dsc:callEmitter('canMessageCreateEvent', m_command, message, cmd_match[3]))
 	return dsc:callEmitter('canMessageCreateEvent', m_command, message, cmd_match[3])
 end
 
@@ -152,7 +148,6 @@ function dsc:onMessageCreate(message)
 	-- Find the command and try to handle it.
 	local m_command = self.commands[cmd_match[2]]
 	local hasValid, hasReason = self:isCommandValid(message, m_command, cmd_match)
-	--p(hasValid, hasReason)
 	if hasValid then
 		-- Execute the chat commands.
 		local status, err = pcall(m_command.onMessageCreate, m_command, message, cmd_match[3])
@@ -172,10 +167,3 @@ function dsc:onMessageDelete(message)
 end
 
 return dsc
-
-
-	--true --(testval ~= nil) or (testval ~= false)
-	--n_err('Invalid bot command.') return false end
-	--if self.prefix ~= cmd_match[1] then return false end
-	-- if not (dsc:callEmitter('canMessageCreateEvent', m_command, message, cmd_match[3]) == false) then return end
-	-- local testval = validEmitterFunc(m_command, 'canMesssgeCreate', message, cmd_match[3])
